@@ -1,0 +1,17 @@
+{
+  "classes": [
+    "HELLO",
+    "THANK_YOU",
+    "GOODBYE",
+    "WHAT",
+    "WHERE",
+    "HOW_ARE_YOU",
+    "SORRY",
+    "MEET",
+    "GO",
+    "COME"
+  ],
+  "sequence_length": 30,
+  "feature_dim": 222,
+  "is_trained": true
+}

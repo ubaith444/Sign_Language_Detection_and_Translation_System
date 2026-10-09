@@ -1,0 +1,32 @@
+# Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+.env
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Editor and IDE configurations
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Temporary test outputs
+data/test_batch_output/
+data/test_session_exports/

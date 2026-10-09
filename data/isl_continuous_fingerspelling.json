@@ -1,0 +1,90 @@
+{
+  "dataset_metadata": {
+    "name": "ISL Continuous Fingerspelling & Sentence Benchmark (Dataset C)",
+    "publication_reference": "Kiran et al., 'Indian Sign Language Continuous Fingerspelling Recognition', ACL Anthology (kirandevraj.github.io/ISL-Fingerspelling)",
+    "scope": "Continuous signing sequences containing aligned video frames, landmark trajectories, and text transcriptions.",
+    "distinction_note": "Focuses on continuous fingerspelled letter sequences and structured phrases rather than unrestricted conversational ISL with facial grammar.",
+    "signer_independent_mandate": "Train and test splits MUST partition by distinct signer identities (disjoint signers). Evaluating across the same signer produces artificially inflated test metrics."
+  },
+  "data_collection_rules": [
+    {
+      "rule_id": "DCR-01",
+      "title": "Multi-Signer Diversity",
+      "requirement": "Record multiple signers with diverse signing hand dominance, hand sizes, and anatomical proportions."
+    },
+    {
+      "rule_id": "DCR-02",
+      "title": "Environmental Variation",
+      "requirement": "Record across diverse indoor/outdoor backgrounds, varying lighting conditions (direct, diffuse, low-light), camera distances (0.8m to 2.2m), and camera angles."
+    },
+    {
+      "rule_id": "DCR-03",
+      "title": "Signing Speed Variation",
+      "requirement": "Capture signs performed at natural conversation speeds, slow articulation, and fast conversational transitions to train temporal models on speed variance."
+    },
+    {
+      "rule_id": "DCR-04",
+      "title": "Expert ISL Annotation",
+      "requirement": "All boundary timestamps and gloss labels must be verified by certified ISL interpreters or native Deaf signers."
+    },
+    {
+      "rule_id": "DCR-05",
+      "title": "Disjoint Signer Splits",
+      "requirement": "Clips from signer S_i must be strictly assigned either to Train or Test, never shared across both. Evaluate via Leave-One-Signer-Out (LOSO) cross-validation."
+    },
+    {
+      "rule_id": "DCR-06",
+      "title": "Explicit Out-of-Vocabulary / Unknown Tracking",
+      "requirement": "Record resting hand poses, ambient conversational gestures, and out-of-vocabulary handshapes to train and evaluate rejection thresholds rather than forcing unknown signs into false positives."
+    },
+    {
+      "rule_id": "DCR-07",
+      "title": "Informed Consent & Privacy Protocol",
+      "requirement": "Obtain signed, informed consent prior to recording or storing any video data. Provide anonymization options (background blurring and landmark-only skeletal transmission)."
+    }
+  ],
+  "sample_aligned_sequences": [
+    {
+      "sequence_id": "ISL_CFS_001",
+      "signer_id": "signer_01",
+      "split": "train",
+      "glosses": ["H", "E", "L", "L", "O"],
+      "target_word": "HELLO",
+      "aligned_time_segments_sec": [
+        {"token": "H", "start": 0.0, "end": 0.35},
+        {"token": "E", "start": 0.35, "end": 0.68},
+        {"token": "L", "start": 0.68, "end": 1.05},
+        {"token": "L", "start": 1.05, "end": 1.42},
+        {"token": "O", "start": 1.42, "end": 1.80}
+      ]
+    },
+    {
+      "sequence_id": "ISL_CFS_002",
+      "signer_id": "signer_02",
+      "split": "train",
+      "glosses": ["I", "N", "D", "I", "A"],
+      "target_word": "INDIA",
+      "aligned_time_segments_sec": [
+        {"token": "I", "start": 0.0, "end": 0.32},
+        {"token": "N", "start": 0.32, "end": 0.70},
+        {"token": "D", "start": 0.70, "end": 1.10},
+        {"token": "I", "start": 1.10, "end": 1.45},
+        {"token": "A", "start": 1.45, "end": 1.85}
+      ]
+    },
+    {
+      "sequence_id": "ISL_CFS_003",
+      "signer_id": "signer_03",
+      "split": "test",
+      "glosses": ["P", "E", "A", "C", "E"],
+      "target_word": "PEACE",
+      "aligned_time_segments_sec": [
+        {"token": "P", "start": 0.0, "end": 0.40},
+        {"token": "E", "start": 0.40, "end": 0.75},
+        {"token": "A", "start": 0.75, "end": 1.10},
+        {"token": "C", "start": 1.10, "end": 1.45},
+        {"token": "E", "start": 1.45, "end": 1.80}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "dataset_metadata": {
+    "name": "ISL Alphabet & Fingerspelling Dataset Specification",
+    "reference": "Indian Sign Language (ISL) Alphabet Dataset on Kaggle (prathumarikeri/indian-sign-language-isl)",
+    "scope": "Isolated manual alphabet letters (A-Z) and digits (1-9) for fingerspelling, not general continuous sentence translation.",
+    "signing_nature": "Static manual configurations primarily utilizing two-handed fingerspelling conventions characteristic of ISL."
+  },
+  "alphabet": {
+    "A": {
+      "type": "two_hand",
+      "description": "Dominant index finger touching the tip of the non-dominant thumb.",
+      "category": "vowel"
+    },
+    "B": {
+      "type": "two_hand",
+      "description": "Both hands form circles with thumbs and index fingers touching to create a 'B' shape.",
+      "category": "consonant"
+    },
+    "C": {
+      "type": "single_hand",
+      "description": "Dominant hand forms a curved 'C' shape facing sideways.",
+      "category": "consonant"
+    },
+    "D": {
+      "type": "two_hand",
+      "description": "Non-dominant index finger held vertically upright while dominant index finger and thumb form a curve against it.",
+      "category": "consonant"
+    },
+    "E": {
+      "type": "two_hand",
+      "description": "Dominant index finger touching the tip of the non-dominant index finger.",
+      "category": "vowel"
+    },
+    "F": {
+      "type": "two_hand",
+      "description": "Dominant index and middle fingers placed horizontally across non-dominant index and middle fingers.",
+      "category": "consonant"
+    },
+    "G": {
+      "type": "two_hand",
+      "description": "Both closed fists placed one on top of the other.",
+      "category": "consonant"
+    },
+    "H": {
+      "type": "two_hand",
+      "description": "Dominant open palm sliding horizontally across non-dominant open flat palm.",
+      "category": "consonant"
+    },
+    "I": {
+      "type": "two_hand",
+      "description": "Dominant index finger touching the tip of the non-dominant middle finger.",
+      "category": "vowel"
+    },
+    "J": {
+      "type": "two_hand",
+      "description": "Dominant index finger starts on the non-dominant middle finger and traces down into palm in a 'J' curve.",
+      "category": "consonant"
+    },
+    "K": {
+      "type": "two_hand",
+      "description": "Non-dominant index finger held vertical; dominant hooked index finger touching its joint.",
+      "category": "consonant"
+    },
+    "L": {
+      "type": "single_hand",
+      "description": "Dominant thumb and index finger extended at right angles forming an 'L' shape.",
+      "category": "consonant"
+    },
+    "M": {
+      "type": "two_hand",
+      "description": "Three middle fingertips of dominant hand resting on non-dominant flat palm.",
+      "category": "consonant"
+    },
+    "N": {
+      "type": "two_hand",
+      "description": "Two fingertips (index and middle) of dominant hand resting on non-dominant flat palm.",
+      "category": "consonant"
+    },
+    "O": {
+      "type": "two_hand",
+      "description": "Dominant index finger touching the tip of the non-dominant ring finger.",
+      "category": "vowel"
+    },
+    "P": {
+      "type": "two_hand",
+      "description": "Dominant index finger and thumb forming a circle, touching the tip of the non-dominant upright index finger.",
+      "category": "consonant"
+    },
+    "Q": {
+      "type": "two_hand",
+      "description": "Non-dominant thumb and index form a circle; dominant index finger hooks through it.",
+      "category": "consonant"
+    },
+    "R": {
+      "type": "two_hand",
+      "description": "Dominant hooked index finger resting across non-dominant upright palm.",
+      "category": "consonant"
+    },
+    "S": {
+      "type": "two_hand",
+      "description": "Little fingers of both hands hooked together.",
+      "category": "consonant"
+    },
+    "T": {
+      "type": "two_hand",
+      "description": "Dominant index finger touching the side/edge of non-dominant flat hand.",
+      "category": "consonant"
+    },
+    "U": {
+      "type": "two_hand",
+      "description": "Dominant index finger touching the tip of non-dominant little finger.",
+      "category": "vowel"
+    },
+    "V": {
+      "type": "two_hand",
+      "description": "Dominant index and middle fingers extended in 'V' shape resting on non-dominant palm.",
+      "category": "consonant"
+    },
+    "W": {
+      "type": "two_hand",
+      "description": "Both hands interlock fingers pointing upwards in 'W' shape.",
+      "category": "consonant"
+    },
+    "X": {
+      "type": "two_hand",
+      "description": "Index fingers of both hands crossed over each other forming an 'X'.",
+      "category": "consonant"
+    },
+    "Y": {
+      "type": "two_hand",
+      "description": "Dominant hand index finger resting in the 'V' between thumb and index of non-dominant hand.",
+      "category": "consonant"
+    },
+    "Z": {
+      "type": "two_hand",
+      "description": "Dominant hand held in vertical flat palm against non-dominant palm forming bent 'Z' plane.",
+      "category": "consonant"
+    }
+  }
+}

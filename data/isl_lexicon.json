@@ -1,0 +1,172 @@
+{
+  "static_signs": {
+    "NAMASTE": {
+      "type": "two_hand",
+      "category": "greeting",
+      "description": "Both palms pressed flat together against the chest at heart level in the traditional greeting gesture.",
+      "english_meaning": "Namaste / Greetings"
+    },
+    "PLEASE": {
+      "type": "two_hand",
+      "category": "politeness",
+      "description": "Flat open hands positioned forward or open palm touching chest gently.",
+      "english_meaning": "Please"
+    },
+    "HELP": {
+      "type": "two_hand",
+      "category": "emergency",
+      "description": "Closed dominant fist resting on open flat non-dominant palm, lifted upwards.",
+      "english_meaning": "Help"
+    },
+    "YES": {
+      "type": "single_hand",
+      "category": "response",
+      "description": "Fist held upright at chest level with wrist flexing forward in a nodding motion.",
+      "english_meaning": "Yes"
+    },
+    "NO": {
+      "type": "single_hand",
+      "category": "response",
+      "description": "Index finger extended and waving laterally, or index and middle finger closing against thumb.",
+      "english_meaning": "No"
+    },
+    "HOUSE": {
+      "type": "two_hand",
+      "category": "noun",
+      "description": "Fingertips of both hands meeting angled at the top resembling the roof of a house.",
+      "english_meaning": "House / Home"
+    },
+    "BOOK": {
+      "type": "two_hand",
+      "category": "noun",
+      "description": "Palms joined edge-to-edge opening up like a book.",
+      "english_meaning": "Book"
+    },
+    "WATER": {
+      "type": "single_hand",
+      "category": "need",
+      "description": "W-shape or open hand brought near the lips/chin area.",
+      "english_meaning": "Water"
+    },
+    "FOOD": {
+      "type": "single_hand",
+      "category": "need",
+      "description": "Fingertips pinched together tapping the lips twice.",
+      "english_meaning": "Food"
+    },
+    "PEACE": {
+      "type": "two_hand",
+      "category": "concept",
+      "description": "V sign (index and middle fingers extended) with both hands held steady.",
+      "english_meaning": "Peace"
+    },
+    "ME": {
+      "type": "single_hand",
+      "category": "pronoun",
+      "description": "Index finger pointing directly toward the signer's chest.",
+      "english_meaning": "I / Me"
+    },
+    "YOU": {
+      "type": "single_hand",
+      "category": "pronoun",
+      "description": "Index finger pointing directly forward toward the conversational partner.",
+      "english_meaning": "You"
+    },
+    "TEACHER": {
+      "type": "two_hand",
+      "category": "person",
+      "description": "Flat hands near temples moving forward, followed by person marker sign.",
+      "english_meaning": "Teacher"
+    },
+    "DOCTOR": {
+      "type": "two_hand",
+      "category": "person",
+      "description": "Index and middle fingers of dominant hand feeling the wrist pulse of non-dominant hand.",
+      "english_meaning": "Doctor"
+    },
+    "STUDENT": {
+      "type": "two_hand",
+      "category": "person",
+      "description": "Dominant hand taking knowledge from non-dominant palm to forehead.",
+      "english_meaning": "Student"
+    },
+    "FRIEND": {
+      "type": "two_hand",
+      "category": "person",
+      "description": "Index fingers hooked together, alternating sides.",
+      "english_meaning": "Friend"
+    }
+  },
+  "dynamic_signs": {
+    "HELLO": {
+      "type": "single_hand_dynamic",
+      "duration_frames": 30,
+      "category": "greeting",
+      "description": "Open hand raised near temple swaying laterally in a waving sequence.",
+      "english_meaning": "Hello"
+    },
+    "THANK_YOU": {
+      "type": "single_hand_dynamic",
+      "duration_frames": 30,
+      "category": "politeness",
+      "description": "Flat hand fingertips touching chin/lips and translating forward and outward toward viewer.",
+      "english_meaning": "Thank you"
+    },
+    "GOODBYE": {
+      "type": "single_hand_dynamic",
+      "duration_frames": 30,
+      "category": "greeting",
+      "description": "Hand held high fingers fluttering or waving goodbye horizontally.",
+      "english_meaning": "Goodbye"
+    },
+    "WHAT": {
+      "type": "two_hand_dynamic",
+      "duration_frames": 30,
+      "category": "question",
+      "description": "Both hands open, palms facing up, oscillating side to side with furrowed brow non-manual marker.",
+      "english_meaning": "What"
+    },
+    "WHERE": {
+      "type": "single_hand_dynamic",
+      "duration_frames": 30,
+      "category": "question",
+      "description": "Dominant index finger wagging side to side repeatedly with head tilted.",
+      "english_meaning": "Where"
+    },
+    "HOW_ARE_YOU": {
+      "type": "two_hand_dynamic",
+      "duration_frames": 30,
+      "category": "greeting",
+      "description": "Curved hands touching chest and opening outwards facing upwards toward recipient.",
+      "english_meaning": "How are you?"
+    },
+    "SORRY": {
+      "type": "single_hand_dynamic",
+      "duration_frames": 30,
+      "category": "politeness",
+      "description": "Fist rubbing in a circular clockwise motion over the chest.",
+      "english_meaning": "Sorry"
+    },
+    "MEET": {
+      "type": "two_hand_dynamic",
+      "duration_frames": 30,
+      "category": "action",
+      "description": "Both hands with index fingers extended upright starting apart and approaching until touching.",
+      "english_meaning": "Meet"
+    },
+    "GO": {
+      "type": "two_hand_dynamic",
+      "duration_frames": 30,
+      "category": "action",
+      "description": "Index fingers pointing forward and accelerating away from the signer.",
+      "english_meaning": "Go"
+    },
+    "COME": {
+      "type": "two_hand_dynamic",
+      "duration_frames": 30,
+      "category": "action",
+      "description": "Index fingers gesturing repeatedly inward towards the signer's chest.",
+      "english_meaning": "Come"
+    }
+  }
+}

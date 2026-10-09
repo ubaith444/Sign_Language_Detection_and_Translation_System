@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Indian Sign Language (ISL) Detection & Translation System</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand-section">
+        <h1 class="brand-title">Indian Sign Language Translation System</h1>
+        <p class="brand-subtitle">Real-time holistic gesture recognition, continuous fingerspelling, and syntactic English translation</p>
+      </div>
+      <div class="header-status-group">
+        <div class="status-pill" id="system-status-pill">
+          <span class="status-dot"></span>
+          <span id="system-status-text">Pipeline Active</span>
+        </div>
+        <div class="telemetry-tag" id="telemetry-fps">FPS: -- | Latency: --ms</div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="app-main">
+      <!-- Left Column: Video Feed & Sentence Builder -->
+      <section class="feed-column" aria-label="Sign Language Detection Feed">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Live Vision Stream & Detection HUD</h2>
+            <span class="telemetry-tag" id="active-mode-tag">Mode: Static Manual Signs</span>
+          </div>
+          <div class="card-body">
+            <!-- Video Container -->
+            <div class="video-stage">
+              <img id="camera-stream" class="video-feed-img" src="/video_feed" alt="Real-time Indian Sign Language Camera Feed">
+              <div class="video-overlay-hud">
+                <span class="hud-badge" id="hud-camera-status">Source: Web Camera</span>
+                <span class="hud-badge" id="hud-privacy-badge">Privacy: Standard</span>
+              </div>
+            </div>
+
+            <!-- Real-time Prediction Banner -->
+            <div class="detection-banner" aria-live="polite">
+              <div class="detection-row">
+                <div class="detection-label-group">
+                  <span class="form-label">Current Sign:</span>
+                  <span class="detection-sign-name" id="detected-sign-name">Waiting...</span>
+                </div>
+                <span class="uncertainty-pill known" id="uncertainty-status-pill">Calibrated</span>
+              </div>
+              <div class="confidence-bar-container">
+                <span class="form-label" style="font-size: 0.75rem;">Confidence:</span>
+                <div class="progress-track">
+                  <div class="progress-fill" id="confidence-bar-fill" style="width: 0%;"></div>
+                </div>
+                <span class="confidence-percent" id="confidence-val">0%</span>
+              </div>
+
+              <!-- Non-Manual Facial Modality & HamNoSys Banner -->
+              <div style="margin-top: 8px; padding-top: 6px; border-top: 1px dashed var(--color-border-subtle); display: flex; flex-direction: column; gap: 4px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span class="form-label" style="font-size: 0.75rem;">Facial Modality:</span>
+                  <div style="display: flex; gap: 6px; align-items: center;">
+                    <span class="hud-badge" id="hud-modality-pill" style="font-weight: 600; color: var(--color-primary); background: var(--color-primary-light);">Declarative Statement</span>
+                    <span id="hud-modality-cue" style="font-size: 0.6875rem; color: var(--color-text-secondary);">Neutral brow</span>
+                  </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.6875rem; color: var(--color-text-secondary);">
+                  <span>HamNoSys: <strong id="hud-hamnosys-summary" style="font-family: var(--font-family-mono); color: var(--color-text);">[REST | PALM_OUT | NEUTRAL]</strong></span>
+                  <span id="hud-hamnosys-code" style="font-family: var(--font-family-mono); font-size: 0.625rem; color: var(--color-text-muted);">hamnomovement</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sentence Builder Studio -->
+            <div class="sentence-studio">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <label class="form-label">Accumulated Sign Sequence:</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <span style="font-size: 0.75rem; color: var(--color-text-secondary);">Target Workflow:</span>
+                  <select id="select-builder-mode" class="form-select" style="padding: 2px 8px; font-size: 0.75rem;">
+                    <option value="GLOSS_TRANSLATION">ISL Sentence Translation (SOV &rarr; SVO)</option>
+                    <option value="FINGERSPELLING">Alphabet Fingerspelling (Letter-to-Word)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Chips Container -->
+              <div class="gloss-stream-container" id="gloss-chips-container">
+                <span class="empty-chip-placeholder" id="empty-gloss-placeholder">No signs accumulated yet. Use controls below or continuous auto-segmenter.</span>
+              </div>
+
+              <!-- Syntactic English Translation Output -->
+              <div class="translation-result-box">
+                <div class="translation-meta-label" id="translation-method-label">Syntactic English Translation</div>
+                <div class="translation-output-text" id="translated-english-text">Awaiting sign input for translation...</div>
+              </div>
+
+              <!-- Action Controls Toolbar -->
+              <div class="button-toolbar">
+                <button type="button" class="btn btn-primary" id="btn-add-word">Add Sign</button>
+                <button type="button" class="btn btn-secondary" id="btn-add-space">Add Space</button>
+                <button type="button" class="btn btn-secondary" id="btn-undo">Delete / Backspace</button>
+                <button type="button" class="btn btn-destructive" id="btn-clear">Clear All</button>
+                <button type="button" class="btn btn-speak" id="btn-speak">Speak Aloud (TTS)</button>
+              </div>
+
+              <!-- User Manual Correction Input -->
+              <div class="form-group" style="margin-top: 4px;">
+                <label for="manual-gloss-input" class="form-label">User Correction (Type Gloss / Letter to Insert):</label>
+                <div style="display: flex; gap: 8px;">
+                  <input type="text" id="manual-gloss-input" class="form-input" style="flex: 1;" placeholder="e.g. A, B, NAMASTE, WATER, TEACHER">
+                  <button type="button" class="btn btn-secondary" id="btn-submit-manual-gloss">Insert</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 5: Two-Way Communication & ISL Sign Player -->
+          <div class="tab-panel" id="twoway-panel" role="tabpanel">
+            <div style="border-bottom: 1px solid var(--color-border-subtle); padding-bottom: 8px;">
+              <h3 style="font-size: 0.9375rem; font-weight: 700; color: var(--color-text);">Two-Way Conversation: Speech-to-ISL Sign Player</h3>
+              <p style="font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 2px;">
+                Hearing conversants speak or type English; translates SVO to ISL SOV grammar and animates signs on the visual player.
+              </p>
+            </div>
+
+            <!-- English Input Box -->
+            <div class="form-group">
+              <label for="twoway-speech-input" class="form-label" style="font-size: 0.75rem;">English Speech / Text Input:</label>
+              <textarea id="twoway-speech-input" class="form-input" rows="2" style="resize: vertical; font-size: 0.8125rem;" placeholder="Type or click 'Listen Microphone' (e.g. 'What is your name?' or 'I am giving you the book')"></textarea>
+            </div>
+
+            <div style="display: flex; gap: 8px;">
+              <button type="button" class="btn btn-primary" id="btn-listen-mic" style="flex: 1;">Listen Microphone (Voice)</button>
+              <button type="button" class="btn btn-secondary" id="btn-translate-play-isl" style="flex: 1;">Translate & Play ISL</button>
+            </div>
+
+            <!-- Translation Result Banner -->
+            <div class="translation-result-box" style="margin-top: 4px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="translation-meta-label">ISL Syntactic Translation (SOV)</span>
+                <span class="hud-badge" id="player-modality-badge">Declarative</span>
+              </div>
+              <div class="translation-output-text" id="player-gloss-sequence" style="font-size: 1.1rem; color: var(--color-primary);">Awaiting English speech or text...</div>
+            </div>
+
+            <!-- Skeletal Canvas Sign Player -->
+            <div style="position: relative; border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; background: #ffffff;">
+              <canvas id="sign-player-canvas" width="460" height="280" style="display: block; width: 100%; height: auto; background: #fafafa;"></canvas>
+              <div style="position: absolute; top: 10px; left: 10px; display: flex; gap: 6px;">
+                <span class="hud-badge" id="player-status-badge">Player Ready</span>
+                <span class="hud-badge" id="player-sign-cue" style="background: #e0f2fe; color: #0284c7;">Sign: None</span>
+              </div>
+              <div style="position: absolute; bottom: 8px; left: 12px; right: 12px; display: flex; justify-content: space-between; font-size: 0.6875rem; color: var(--color-text-muted);">
+                <span id="player-hamnosys-cue">HamNoSys: --</span>
+                <span id="player-timeline-cue">0 / 0</span>
+              </div>
+            </div>
+
+            <!-- Player Controls -->
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <button type="button" class="btn btn-secondary" id="btn-player-step-prev" style="padding: 6px 12px; font-size: 0.75rem;">Prev</button>
+              <button type="button" class="btn btn-primary" id="btn-player-play" style="flex: 1; padding: 6px 12px; font-size: 0.75rem;">Play Sequence</button>
+              <button type="button" class="btn btn-secondary" id="btn-player-pause" style="padding: 6px 12px; font-size: 0.75rem;">Pause</button>
+              <button type="button" class="btn btn-secondary" id="btn-player-step-next" style="padding: 6px 12px; font-size: 0.75rem;">Next</button>
+              <select id="player-speed-select" class="form-select" style="padding: 4px 6px; font-size: 0.75rem; width: 75px;">
+                <option value="0.75">0.75x</option>
+                <option value="1.0" selected>1.0x</option>
+                <option value="1.5">1.5x</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Tab 6: Session History & Transcript Exports -->
+          <div class="tab-panel" id="session-panel" role="tabpanel">
+            <div style="border-bottom: 1px solid var(--color-border-subtle); padding-bottom: 8px;">
+              <h3 style="font-size: 0.9375rem; font-weight: 700; color: var(--color-text);">Communication Session History & Audit Transcripts</h3>
+              <p style="font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 2px;">
+                Chronological dialogue logging across both conversation directions with 1-click PDF/TXT/JSON exports.
+              </p>
+            </div>
+
+            <!-- Session Metadata Box -->
+            <div style="background-color: var(--color-surface-muted); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-md); padding: 10px; font-size: 0.75rem;">
+              <div style="display: flex; justify-content: space-between;">
+                <span>Active Session: <strong id="session-id-label">--</strong></span>
+                <span>Total Turns: <strong id="session-turn-count">0</strong></span>
+              </div>
+              <div style="margin-top: 6px; display: flex; gap: 8px;">
+                <button type="button" class="btn btn-secondary" id="btn-session-new" style="flex: 1; padding: 4px 8px; font-size: 0.75rem;">Start New Session</button>
+                <button type="button" class="btn btn-destructive" id="btn-session-clear" style="padding: 4px 8px; font-size: 0.75rem;">Clear Log</button>
+              </div>
+            </div>
+
+            <!-- Export Buttons Toolbar -->
+            <div>
+              <label class="form-label" style="font-size: 0.75rem;">Export Complete Transcript:</label>
+              <div class="download-btn-group">
+                <a id="btn-dl-session-pdf" class="download-link-btn primary" href="/api/session/export/pdf" download>Download PDF (.pdf)</a>
+                <a id="btn-dl-session-txt" class="download-link-btn" href="/api/session/export/txt" download>Download Text (.txt)</a>
+                <a id="btn-dl-session-json" class="download-link-btn" href="/api/session/export/json" download>Download JSON (.json)</a>
+                <button type="button" class="download-link-btn" id="btn-refresh-history">Refresh History</button>
+              </div>
+            </div>
+
+            <!-- History Turns List -->
+            <div>
+              <label class="form-label" style="font-size: 0.75rem;">Recorded Conversation Dialogue Turns:</label>
+              <div id="session-turns-list" style="max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 8px; background: #ffffff;">
+                <p style="font-size: 0.75rem; color: var(--color-text-muted); text-align: center; padding: 12px;">No dialogue turns recorded in active session yet.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Evaluation Metrics, Lexicon & Settings -->
+      <aside class="panel-column" aria-label="System Metrics and Configurations">
+        <div class="card" style="height: 100%;">
+          <!-- Tab Navigation -->
+          <nav class="tab-navigation" role="tablist">
+            <button type="button" class="tab-btn active" role="tab" id="tab-btn-evaluation" data-tab="evaluation-panel">Evaluation</button>
+            <button type="button" class="tab-btn" role="tab" id="tab-btn-lexicon" data-tab="lexicon-panel">ISL Lexicon</button>
+            <button type="button" class="tab-btn" role="tab" id="tab-btn-settings" data-tab="settings-panel">Controls</button>
+            <button type="button" class="tab-btn" role="tab" id="tab-btn-video" data-tab="video-panel">Video Batch</button>
+            <button type="button" class="tab-btn" role="tab" id="tab-btn-twoway" data-tab="twoway-panel">Two-Way Sign Player</button>
+            <button type="button" class="tab-btn" role="tab" id="tab-btn-session" data-tab="session-panel">Session History & PDF</button>
+          </nav>
+
+          <!-- Tab 1: Evaluation Metrics -->
+          <div class="tab-panel active" id="evaluation-panel" role="tabpanel">
+            <div class="metrics-summary-grid">
+              <div class="metric-stat-box">
+                <div class="metric-stat-title">Accuracy (42 Classes)</div>
+                <div class="metric-stat-value" id="metric-accuracy">--</div>
+              </div>
+              <div class="metric-stat-box">
+                <div class="metric-stat-title">Macro F1-Score</div>
+                <div class="metric-stat-value" id="metric-macro-f1">--</div>
+              </div>
+              <div class="metric-stat-box">
+                <div class="metric-stat-title">Word Error Rate (WER)</div>
+                <div class="metric-stat-value" id="metric-wer">--</div>
+              </div>
+              <div class="metric-stat-box">
+                <div class="metric-stat-title">Inference Latency</div>
+                <div class="metric-stat-value" id="metric-latency">--ms</div>
+              </div>
+            </div>
+
+            <!-- Signer-Independent Split Card -->
+            <div class="card" style="border-color: #cbd5e1; background-color: var(--color-surface-muted);">
+              <div style="padding: 12px;">
+                <div class="metric-stat-title" style="color: var(--color-primary);">Signer-Independent (Disjoint Signers) Evaluation</div>
+                <p style="font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 4px;">
+                  Prevents inflated accuracy by keeping all clips from one signer strictly in one split:
+                </p>
+                <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.8125rem;">
+                  <span>Unseen Test Signer: <strong id="si-test-signer">signer_04</strong></span>
+                  <span>Accuracy: <strong id="si-accuracy">--</strong></span>
+                  <span>Generalization Gap: <strong id="si-gap">--</strong></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Sign Classification Confusion Matrix:</label>
+              <div class="matrix-container" id="matrix-container">
+                <p style="padding: 12px; font-size: 0.8125rem; color: var(--color-text-muted);">Loading confusion matrix...</p>
+              </div>
+            </div>
+
+            <button type="button" class="btn btn-secondary" id="btn-run-benchmark" style="width: 100%;">Run Quantitative Benchmark Suite</button>
+          </div>
+
+          <!-- Tab 2: ISL Lexicon Dictionary & Alphabet -->
+          <div class="tab-panel" id="lexicon-panel" role="tabpanel">
+            <div style="display: flex; gap: 8px; border-bottom: 1px solid var(--color-border-subtle); padding-bottom: 8px;">
+              <button type="button" class="btn btn-secondary" id="btn-show-alphabet" style="padding: 4px 10px; font-size: 0.75rem;">Dataset A: Alphabet (A-Z)</button>
+              <button type="button" class="btn btn-secondary" id="btn-show-words" style="padding: 4px 10px; font-size: 0.75rem;">Dataset C & Lexical Signs</button>
+            </div>
+            <div class="lexicon-list" id="lexicon-list-container">
+              <p style="color: var(--color-text-muted); font-size: 0.8125rem;">Loading lexicon definitions...</p>
+            </div>
+          </div>
+
+          <!-- Tab 3: Controls & Consent Protocol -->
+          <div class="tab-panel" id="settings-panel" role="tabpanel">
+            <div class="form-group">
+              <label for="select-detection-mode" class="form-label">Recognition Model Target:</label>
+              <select id="select-detection-mode" class="form-select">
+                <option value="STATIC">Static Manual Signs & Alphabet (Random Forest / MLP)</option>
+                <option value="DYNAMIC">Dynamic Movement Sequences (Temporal GRU / LSTM)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="confidence-threshold-slider" class="form-label">
+                Rejection Threshold: <span id="threshold-val-label" style="font-family: var(--font-family-mono);">40%</span>
+              </label>
+              <input type="range" id="confidence-threshold-slider" min="20" max="90" value="40" class="form-input">
+              <span class="toggle-label-desc">Predictions below this threshold enter the UNKNOWN / UNCERTAIN state to prevent false positives.</span>
+            </div>
+
+            <div class="toggle-row">
+              <div>
+                <label for="toggle-privacy-blur" class="form-label" style="cursor: pointer;">Environmental Privacy Blur</label>
+                <p class="toggle-label-desc">Obscures personal background; transmits only normalized skeletal coordinates.</p>
+              </div>
+              <input type="checkbox" id="toggle-privacy-blur" style="width: 18px; height: 18px;">
+            </div>
+
+            <div class="toggle-row">
+              <div>
+                <label for="toggle-auto-segmenter" class="form-label" style="cursor: pointer;">Continuous Auto-Segmentation</label>
+                <p class="toggle-label-desc">Commits signs via kinetic displacement velocity without requiring pauses.</p>
+              </div>
+              <input type="checkbox" id="toggle-auto-segmenter" checked style="width: 18px; height: 18px;">
+            </div>
+
+            <!-- Data Collection Consent Card -->
+            <div class="card" style="border-color: #93c5fd; background-color: #f0f9ff; padding: 12px; margin-top: 8px;">
+              <div class="form-label" style="color: var(--color-primary);">Data Collection & Consent Protocol</div>
+              <p style="font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 4px;">
+                Adhering to ethical research standards: Informed consent is required prior to recording or storing any video data.
+              </p>
+              <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+                <input type="checkbox" id="consent-checkbox" checked style="width: 16px; height: 16px;">
+                <label for="consent-checkbox" style="font-size: 0.8125rem; font-weight: 600;">Participant Informed Consent Verified</label>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 12px;">
+              <button type="button" class="btn btn-secondary" id="btn-retrain-models" style="width: 100%;">Retrain Models with Synthetic Prototypes</button>
+            </div>
+
+            <!-- Real-Time Webcam Fine-Tuning & Few-Shot Calibration Card -->
+            <div class="card" style="border-color: #bbf7d0; background-color: #f0fdf4; padding: 14px; margin-top: 14px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="form-label" style="color: var(--color-success); font-weight: 700; margin: 0;">Live Webcam Fine-Tuning & Few-Shot Calibration</div>
+                <span class="hud-badge" id="finetune-sample-badge" style="background: #dcfce7; color: var(--color-success); font-weight: 600;">0 Samples Captured</span>
+              </div>
+              <p style="font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 4px;">
+                Calibrate the model directly on your hand geometry and camera framing to separate visually similar signs (e.g. vowels A/E/I/O/U or fists M/N/T).
+              </p>
+
+              <div style="display: flex; gap: 8px; margin-top: 10px; align-items: flex-end;">
+                <div style="flex: 1;">
+                  <label for="select-finetune-sign" class="form-label" style="font-size: 0.75rem;">Target Sign to Calibrate:</label>
+                  <select id="select-finetune-sign" class="form-select" style="font-size: 0.8125rem; padding: 6px 10px;">
+                    <!-- A-Z Alphabet Letters -->
+                    <option value="A">Letter A (Index to Thumb Tip)</option>
+                    <option value="B">Letter B (Two Loops)</option>
+                    <option value="C">Letter C (Curved Hand)</option>
+                    <option value="D">Letter D (Index Contact)</option>
+                    <option value="E">Letter E (Index to Index Tip)</option>
+                    <option value="F">Letter F (Cross Fingers)</option>
+                    <option value="G">Letter G (Stacked Fists)</option>
+                    <option value="H">Letter H (Sliding Palms)</option>
+                    <option value="I">Letter I (Index to Middle Tip)</option>
+                    <option value="J">Letter J (J-Curve Trace)</option>
+                    <option value="K">Letter K (Index Hook)</option>
+                    <option value="L">Letter L (L-Shape)</option>
+                    <option value="M">Letter M (3-Finger Contact)</option>
+                    <option value="N">Letter N (2-Finger Contact)</option>
+                    <option value="O">Letter O (Index to Ring Tip)</option>
+                    <option value="P">Letter P (Circle Down)</option>
+                    <option value="Q">Letter Q (Hook Contact)</option>
+                    <option value="R">Letter R (Crossed Finger)</option>
+                    <option value="S">Letter S (Fist Wrap)</option>
+                    <option value="T">Letter T (Tuck Contact)</option>
+                    <option value="U">Letter U (Index to Pinky Tip)</option>
+                    <option value="V">Letter V (V-Shape Base)</option>
+                    <option value="W">Letter W (Interlocked Fingers)</option>
+                    <option value="X">Letter X (Crossed Index Fingers)</option>
+                    <option value="Y">Letter Y (Index-Thumb Stem)</option>
+                    <option value="Z">Letter Z (Z-Stroke Contact)</option>
+                    <!-- Core Vocabulary Signs -->
+                    <option value="NAMASTE">Word: NAMASTE</option>
+                    <option value="PLEASE">Word: PLEASE</option>
+                    <option value="HELP">Word: HELP</option>
+                    <option value="YES">Word: YES</option>
+                    <option value="NO">Word: NO</option>
+                    <option value="WATER">Word: WATER</option>
+                    <option value="FOOD">Word: FOOD</option>
+                    <option value="TEACHER">Word: TEACHER</option>
+                  </select>
+                </div>
+                <button type="button" class="btn btn-primary" id="btn-capture-finetune-sample" style="font-size: 0.8125rem; padding: 7px 12px; white-space: nowrap;">
+                  Capture Frame
+                </button>
+              </div>
+
+              <!-- Retrain / Reset toolbar -->
+              <div style="display: flex; gap: 8px; margin-top: 10px;">
+                <button type="button" class="btn btn-success" id="btn-run-finetune" style="flex: 2; font-size: 0.8125rem; padding: 8px; background-color: var(--color-success); border-color: var(--color-success); color: white;">
+                  Fine-Tune Model Now (1-Click)
+                </button>
+                <button type="button" class="btn btn-secondary" id="btn-reset-finetune" style="flex: 1; font-size: 0.75rem; padding: 8px;">
+                  Reset Baseline
+                </button>
+              </div>
+
+              <!-- Calibration log/feedback -->
+              <div id="finetune-feedback-box" style="margin-top: 8px; padding: 8px; border-radius: var(--radius-sm); background: white; border: 1px solid #bbf7d0; font-size: 0.75rem; color: var(--color-text-secondary); display: none;">
+                <span id="finetune-feedback-text">Ready for calibration. Position your hand and click Capture Frame.</span>
+              </div>
+            </div>
+
+            <!-- External Alphabet Dataset Importer Card -->
+            <div class="card" style="border-color: #cbd5e1; background-color: var(--color-surface-muted); padding: 14px; margin-top: 14px;">
+              <div class="form-label" style="font-weight: 700; color: var(--color-text);">External Alphabet Dataset Importer</div>
+              <p style="font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 4px;">
+                Import external labeled alphabet datasets (e.g. Kaggle ISL Alphabet subfolders A/, B/, C/ or CSV landmark dumps) to expand training coverage.
+              </p>
+              <div style="margin-top: 8px;">
+                <label for="input-dataset-folder" class="form-label" style="font-size: 0.75rem;">Dataset Directory Path:</label>
+                <div style="display: flex; gap: 8px;">
+                  <input type="text" id="input-dataset-folder" class="form-input" style="flex: 1; font-size: 0.8125rem;" placeholder="e.g. D:/Sign Language/data/isl_alphabet_dataset">
+                  <button type="button" class="btn btn-secondary" id="btn-import-dataset" style="font-size: 0.8125rem; white-space: nowrap;">
+                    Import & Train
+                  </button>
+                </div>
+              </div>
+              <div id="dataset-import-status" style="margin-top: 6px; font-size: 0.6875rem; color: var(--color-text-muted); display: none;"></div>
+            </div>
+          </div>
+
+          <!-- Tab 4: Video Batch Processing & Subtitle Exporter -->
+          <div class="tab-panel" id="video-panel" role="tabpanel">
+            <div style="border-bottom: 1px solid var(--color-border-subtle); padding-bottom: 8px;">
+              <h3 style="font-size: 0.9375rem; font-weight: 700; color: var(--color-text);">Offline Video File Batch Ingestion & Subtitle Exporter</h3>
+              <p style="font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 2px;">
+                Extract holistic landmarks, segment continuous signs, translate grammar, and export SRT/WebVTT subtitles.
+              </p>
+            </div>
+
+            <!-- Ingestion Form -->
+            <div class="form-group">
+              <input type="file" id="batch-video-input" accept="video/mp4,video/avi,video/quicktime,video/x-matroska,.mp4,.avi,.mov" style="display: none;">
+              <div class="batch-upload-dropzone" id="dropzone-area">
+                <div class="dropzone-title">Click to Choose or Drag & Drop ISL Video</div>
+                <div class="dropzone-desc">Supported formats: .mp4, .avi, .mov</div>
+                <div class="dropzone-selected-file" id="selected-file-label" style="display: none;"></div>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <div class="form-group" style="flex: 1;">
+                <label for="batch-mode-select" class="form-label" style="font-size: 0.75rem;">Pipeline Mode:</label>
+                <select id="batch-mode-select" class="form-select" style="padding: 4px 8px; font-size: 0.8125rem;">
+                  <option value="AUTO">AUTO (Dynamic Kinetic + Static Manual)</option>
+                  <option value="STATIC">STATIC (Alphabet & Manual Signs)</option>
+                  <option value="DYNAMIC">DYNAMIC (Movement Sequences)</option>
+                </select>
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px; margin-top: 18px;">
+                <input type="checkbox" id="batch-burn-subs-checkbox" checked style="width: 16px; height: 16px;">
+                <label for="batch-burn-subs-checkbox" style="font-size: 0.75rem; font-weight: 600; cursor: pointer;">Burn Subtitles into Video</label>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 8px;">
+              <button type="button" class="btn btn-primary" id="btn-process-uploaded-video" style="flex: 1;" disabled>Process Selected File</button>
+              <button type="button" class="btn btn-secondary" id="btn-process-sample-video" style="flex: 1;">Process Benchmark Clip</button>
+            </div>
+
+            <!-- Processing Spinner / Status -->
+            <div id="batch-status-box" class="video-progress-indicator" style="display: none;">
+              <div class="spinner"></div>
+              <span id="batch-status-text">Processing frames with continuous holistic extractor...</span>
+            </div>
+
+            <!-- Batch Results Container -->
+            <div id="batch-results-container" style="display: none; flex-direction: column; gap: 12px;">
+              <!-- Telemetry Grid -->
+              <div class="metrics-summary-grid">
+                <div class="metric-stat-box">
+                  <div class="metric-stat-title">Duration</div>
+                  <div class="metric-stat-value" id="batch-stat-duration" style="font-size: 1.125rem;">--</div>
+                </div>
+                <div class="metric-stat-box">
+                  <div class="metric-stat-title">Total Frames</div>
+                  <div class="metric-stat-value" id="batch-stat-frames" style="font-size: 1.125rem;">--</div>
+                </div>
+                <div class="metric-stat-box">
+                  <div class="metric-stat-title">Throughput</div>
+                  <div class="metric-stat-value" id="batch-stat-fps" style="font-size: 1.125rem;">-- FPS</div>
+                </div>
+                <div class="metric-stat-box">
+                  <div class="metric-stat-title">Sign Segments</div>
+                  <div class="metric-stat-value" id="batch-stat-segments" style="font-size: 1.125rem;">--</div>
+                </div>
+              </div>
+
+              <!-- Translation Box -->
+              <div class="translation-result-box" style="margin-top: 0;">
+                <div class="translation-meta-label">Syntactic English Translation Result</div>
+                <div class="translation-output-text" id="batch-translated-text" style="font-size: 1rem;">--</div>
+                <div style="font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 4px;">
+                  Glosses: <span id="batch-glosses-list" style="font-family: var(--font-family-mono); font-weight: 600;">--</span>
+                </div>
+              </div>
+
+              <!-- Download Toolbar -->
+              <div>
+                <label class="form-label" style="font-size: 0.75rem;">Export Subtitles & Subtitled Video:</label>
+                <div class="download-btn-group">
+                  <a id="btn-dl-srt" class="download-link-btn" href="#" target="_blank" download>Download SRT (.srt)</a>
+                  <a id="btn-dl-vtt" class="download-link-btn" href="#" target="_blank" download>Download WebVTT (.vtt)</a>
+                  <a id="btn-dl-json" class="download-link-btn" href="#" target="_blank" download>Download JSON (.json)</a>
+                  <a id="btn-dl-mp4" class="download-link-btn primary" href="#" target="_blank" download>Download Video (.mp4)</a>
+                </div>
+              </div>
+
+              <!-- Segments List -->
+              <div>
+                <label class="form-label" style="font-size: 0.75rem;">Detected Timed Sign Segments:</label>
+                <div class="segments-table-container">
+                  <table class="segments-table">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Start &rarr; End (SRT)</th>
+                        <th>Duration</th>
+                        <th>Sign Gloss</th>
+                        <th>Confidence</th>
+                      </tr>
+                    </thead>
+                    <tbody id="batch-segments-tbody">
+                      <tr><td colspan="5" style="text-align:center; color: var(--color-text-muted);">No segments recorded.</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <span>Indian Sign Language (ISL) Detection and Syntactic Translation System &bull; Measurable, Extensible, Signer-Independent Architecture</span>
+    </footer>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

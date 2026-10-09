@@ -1,0 +1,128 @@
+[
+  {
+    "isl_glosses": ["HELLO"],
+    "english_translation": "Hello!",
+    "category": "greeting",
+    "tense": "present"
+  },
+  {
+    "isl_glosses": ["NAMASTE"],
+    "english_translation": "Greetings and welcome.",
+    "category": "greeting",
+    "tense": "present"
+  },
+  {
+    "isl_glosses": ["THANK_YOU"],
+    "english_translation": "Thank you very much.",
+    "category": "politeness",
+    "tense": "present"
+  },
+  {
+    "isl_glosses": ["SORRY"],
+    "english_translation": "I am truly sorry.",
+    "category": "politeness",
+    "tense": "present"
+  },
+  {
+    "isl_glosses": ["HOW_ARE_YOU"],
+    "english_translation": "How are you doing today?",
+    "category": "question",
+    "tense": "present"
+  },
+  {
+    "isl_glosses": ["PLEASE", "HELP", "ME"],
+    "english_translation": "Please help me.",
+    "category": "request",
+    "tense": "imperative"
+  },
+  {
+    "isl_glosses": ["ME", "WATER", "WANT"],
+    "english_translation": "I would like some water.",
+    "category": "need",
+    "tense": "present"
+  },
+  {
+    "isl_glosses": ["ME", "FOOD", "NEED"],
+    "english_translation": "I need some food.",
+    "category": "need",
+    "tense": "present"
+  },
+  {
+    "isl_glosses": ["ME", "TEACHER", "MEET"],
+    "english_translation": "I am meeting the teacher.",
+    "category": "statement",
+    "tense": "present_continuous"
+  },
+  {
+    "isl_glosses": ["ME", "STUDENT"],
+    "english_translation": "I am a student.",
+    "category": "copula_identity",
+    "tense": "present"
+  },
+  {
+    "isl_glosses": ["YOU", "DOCTOR", "CALL"],
+    "english_translation": "Please call a doctor.",
+    "category": "emergency",
+    "tense": "imperative"
+  },
+  {
+    "isl_glosses": ["YOU", "NAME", "WHAT"],
+    "english_translation": "What is your name?",
+    "category": "question",
+    "tense": "present"
+  },
+  {
+    "isl_glosses": ["YOU", "GO", "WHERE"],
+    "english_translation": "Where are you going?",
+    "category": "question",
+    "tense": "present_continuous"
+  },
+  {
+    "isl_glosses": ["DOCTOR", "HOUSE", "COME"],
+    "english_translation": "The doctor is coming to the house.",
+    "category": "statement",
+    "tense": "present_continuous"
+  },
+  {
+    "isl_glosses": ["ME", "HOUSE", "GO"],
+    "english_translation": "I am going home.",
+    "category": "statement",
+    "tense": "present_continuous"
+  },
+  {
+    "isl_glosses": ["FRIEND", "COME", "PLEASE"],
+    "english_translation": "Please come over, my friend.",
+    "category": "request",
+    "tense": "imperative"
+  },
+  {
+    "isl_glosses": ["BOOK", "ME", "GIVE"],
+    "english_translation": "Please give me the book.",
+    "category": "request",
+    "tense": "imperative"
+  },
+  {
+    "isl_glosses": ["YES", "ME", "AGREE"],
+    "english_translation": "Yes, I agree.",
+    "category": "confirmation",
+    "tense": "present"
+  },
+  {
+    "isl_glosses": ["NO", "ME", "REJECT"],
+    "english_translation": "No, I do not agree.",
+    "category": "negation",
+    "tense": "present"
+  },
+  {
+    "isl_glosses": ["PEACE", "WORLD", "WISH"],
+    "english_translation": "I wish peace for the whole world.",
+    "category": "concept",
+    "tense": "present"
+  },
+  {
+    "isl_glosses": ["GOODBYE", "FRIEND"],
+    "english_translation": "Goodbye, my friend.",
+    "category": "farewell",
+    "tense": "present"
+  }
+]
